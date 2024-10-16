@@ -1,39 +1,38 @@
-import React, { useContext } from 'react';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'; //this is routing
+import React from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'; 
 import './App.css';
-import Home from './Components/Home'; //yeh home page keliye
+import Home from './Components/Home'; 
 import Login from './Components/Login';
 import SignUp from './Components/SignUp';
-import { AuthContext, AuthProvider } from './Context/Authcontext';
-import { VisibilityContext, VisibilityProvider } from './Context/Context';
+import { AuthProvider } from './Context/Authcontext';
+import { VisibilityProvider } from './Context/Context';
 
-function App() {
+
+const App = () => {
   
-  const { loginVisib } = useContext(VisibilityContext);
-
   return (
     <div>
-      {loginVisib ? <Login /> : <SignUp />}
+      <Router>
+        <Routes>
+       
+          <Route path="/" element={<Login />} />  
+          
+          <Route path="/signup" element={<SignUp />} />
+ 
+          <Route path="/login" element={<Login />} />
+     
+          <Route path="/home" element={<Home />} />
+        </Routes>
+      </Router>
     </div>
   );
-}
-
+};
 
 const AppWrapper = () => {
   return (
     <AuthProvider>
       <VisibilityProvider>
-        <Router>
-          <Routes>
-            
-            <Route path="/" element={<App />} />  {/* khaali / hua matlab signup vala page */}
-            {/* /home is homepage */}
-            <Route path="/home" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/SignUp" element={<SignUp />} />
-
-          </Routes>
-        </Router>
+        <App />
       </VisibilityProvider>
     </AuthProvider>
   );

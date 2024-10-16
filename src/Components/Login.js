@@ -3,13 +3,17 @@ import { TextField, Button, Typography, Box, Paper } from '@mui/material';
 import { VisibilityContext } from '../Context/Context';
 import { AuthContext } from '../Context/Authcontext'
 import axios from 'axios'; // To make the API call
+import {useNavigate} from 'react-router-dom';
 
 const Login = () => {
   
-  const { setLoginVisib, storeToken } = useContext(VisibilityContext); // Extract storeToken from context
+  const { setLoginVisib } = useContext(VisibilityContext); // Extract storeToken from context
+  const {storeToken} = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPass] = useState('');
   const [error, setError] = useState('');
+
+  const navigate = useNavigate();
 
   const handleClick = () => {
     setLoginVisib(false); // This will trigger the SignUp view
@@ -23,7 +27,9 @@ const Login = () => {
       const response = await axios.post('https://uc-fd-auth-backend.onrender.com/user/login', {
         email,
         password,
-      });
+      }, { headers: { 'Content-Type': 'application/json' } });
+
+      console.log("submitting form");
 
       // Assuming the token is returned in the response
       const token  = response.data;
@@ -33,8 +39,23 @@ const Login = () => {
 
       // Redirect or show the authenticated page
       setLoginVisib(false);
+
+      navigate("/home");
+
     } catch (err) {
-      setError('Invalid login credentials');
+      if (err.response) {
+        // Backend error (invalid credentials)
+        console.error('Backend error:', err.response.data);
+        setError('Invalid login credentials');
+      } else if (err.request) {
+        // No response received (network error)
+        console.error('Network error:', err.request);
+        setError('Network error. Please try again.');
+      } else {
+        // Some other error occurred
+        console.error('Error:', err.message);
+        setError('An unexpected error occurred.');
+      }
     }
   };
 
