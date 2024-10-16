@@ -53,8 +53,11 @@ const Home = () => {
             <List>
               {orderHistory.length > 0 ? (
                 orderHistory.map((order) => (
-                  <ListItem key={order.id}>
-                    <Typography variant="body1">{order.name}</Typography>
+                  
+                    <ListItem >
+                    <Typography style={{marginRight:'10px'}}> {order.id} </Typography>
+                    <Typography style={{marginRight:'10px'}} >{order.item}</Typography>
+                    <Typography style={{marginRight:'10px'}}>{order.price}</Typography>
                   </ListItem>
                 ))
               ) : (
